@@ -1,41 +1,41 @@
-# 1. Solve the given example and perform encryption using Shift cipher/Substitution/Ceaser cipher.
-# 2. Solve the given example and perform decryption using Shift cipher/Substitution/Ceaser cipher.
-
-
-def encrypt(text,shift):
+def encrypt(text, shift):
     result = ""
     
     for char in text:
         if char.isupper():
             new_char = chr((ord(char) - 65 + shift) % 26 + 65)
-            result+= new_char
+            result += new_char
             
         elif char.islower():
             new_char = chr((ord(char) - 97 + shift) % 26 + 97)
-            result+=new_char
+            result += new_char
         else:
-            result+=char
+            result += char
     return result 
-def decrypt(text,shift):
+
+def decrypt(text, shift):
     result = ""
     
     for char in text:
         if char.isupper():
-            new_char = chr((ord(char) - 65 + shift) % 26 + 65)
-            result+= new_char
+            new_char = chr((ord(char) - shift - 65) % 26 + 65)
+            result += new_char
             
         elif char.islower():
-            new_char = chr((ord(char) - 97 + shift) % 26 + 97)
-            result+=new_char
+            new_char = chr((ord(char) - shift - 97) % 26 + 97)
+            result += new_char
         else:
-            result+=char
+            result += char
     return result 
 
 text = "SUYASH"
 shift = 4
 
-encrypted_text = encrypt(text,shift)
-decrypted_text = decrypt(text,shift)
+# Encrypt the original text
+encrypted_text = encrypt(text, shift)
+
+# Decrypt the encrypted text
+decrypted_text = decrypt(encrypted_text, shift)
 
 print("Original Text :", text)
 print("Shift Value   :", shift)
