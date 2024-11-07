@@ -23,18 +23,22 @@ def rsa_verify(message, signature, e, n):
     return "Authenticated" if pow(signature, e, n) == message else "Altered"
 
 # Main code
+# Main code
 p = int(input("Enter prime p: "))
 q = int(input("Enter prime q: "))
 e = int(input("Enter public exponent e: "))
 
+# Generate keys
 public_key, private_key = rsa_keygen(p, q, e)
-print(f"Public Key: (e={public_key[0]}, n={public_key[1]})")
-print(f"Private Key: (d={private_key[0]}, n={private_key[1]})")
+print("Public Key:", public_key)
+print("Private Key:", private_key)
 
+# Sign message
 message = int(input("Enter message (as an integer): "))
 signature = rsa_sign(message, private_key[0], private_key[1])
-print(f"Signature: {signature}")
+print("Signature:", signature)
 
-# Verification
+# Verify signature
 signature_to_verify = int(input("Enter signature to verify: "))
 print(rsa_verify(message, signature_to_verify, public_key[0], public_key[1]))
+
