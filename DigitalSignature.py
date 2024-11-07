@@ -1,29 +1,40 @@
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
 def mod_inverse(e, phi):
-    x, y = 0, 1
-    while e:
-        x, y = y - (phi // e) * x, x
-        phi, e = e, phi % e
-    return y % phi
+    
+    for d in range(1, phi):
+        if (e * d) % phi == 1:
+            return d
+    raise ValueError("No modular inverse found")
 
 def rsa_keygen(p, q, e):
-    n, phi = p * q, (p - 1) * (q - 1)
-    return (e, n), (mod_inverse(e, phi), n)
+    n = p * q
+    phi = (p - 1) * (q - 1)
+    d = mod_inverse(e, phi)
+    return (e, n), (d, n)
 
-def rsa_sign(msg, d, n):
-    return pow(msg, d, n)
+def rsa_sign(message, d, n):
+    return pow(message, d, n)
 
-def rsa_verify(msg, sig, e, n):
-    return "Authenticated" if pow(sig, e, n) == msg else "Altered"
+def rsa_verify(message, signature, e, n):
+    return "Authenticated" if pow(signature, e, n) == message else "Altered"
 
 # Main code
-p, q, e = (int(input(f"Enter {var}: ")) for var in ["p", "q", "e"])
-pub_key, priv_key = rsa_keygen(p, q, e)
-print(f"Public Key: {pub_key}, Private Key: {priv_key}")
+p = int(input("Enter prime p: "))
+q = int(input("Enter prime q: "))
+e = int(input("Enter public exponent e: "))
 
-msg = int(input("Enter message to sign: "))
-sig = rsa_sign(msg, priv_key[0], priv_key[1])
-print(f"Signature: {sig}")
+public_key, private_key = rsa_keygen(p, q, e)
+print(f"Public Key: (e={public_key[0]}, n={public_key[1]})")
+print(f"Private Key: (d={private_key[0]}, n={private_key[1]})")
+
+message = int(input("Enter message (as an integer): "))
+signature = rsa_sign(message, private_key[0], private_key[1])
+print(f"Signature: {signature}")
 
 # Verification
-sig = int(input("Enter signature to verify: "))
-print(rsa_verify(msg, sig, pub_key[0], pub_key[1]))
+signature_to_verify = int(input("Enter signature to verify: "))
+print(rsa_verify(message, signature_to_verify, public_key[0], public_key[1]))
